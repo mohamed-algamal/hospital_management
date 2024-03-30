@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit" model="ir.ui.view"> <!-- any id you went -->
+            <field name="name">sale.order.inherit</field> <!-- any name you went -->
+            <field name="model">sale.order</field> <!-- the field you will inherit it -->
+            <field name="inherit_id" ref="sale.view_order_form"/> <!-- ref is external id -->
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="confirmed_user_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

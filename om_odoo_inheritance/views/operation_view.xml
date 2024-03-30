@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_hospital_operation_form_inherit" model="ir.ui.view"> <!-- any id you went -->
+            <field name="name">hospital.operation.inherit</field> <!-- any name you went -->
+            <field name="model">hospital.operation</field> <!-- the field you will inherit it -->
+            <field name="inherit_id" ref="om_hospital.view_hospital_operation_form"/> <!-- ref is external id -->
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/> <!-- inherit = ['mail.thread'] -->
+                        <field name="activity_ids"/> <!-- inherit = ['mail.activity.mixin'] -->
+                        <field name="message_ids"/> <!-- inherit = ['mail.thread'] -->
+                    </div>
+                </xpath>
+                <!--//field search in field but /field search direct in field-->
+            </field>
+        </record>
+    </data>
+</odoo>
