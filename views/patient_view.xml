@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- the kanban view -->
+    <record id="patient_view_kanban" model="ir.ui.view">
+        <field name="name">patient.kanban</field>
+        <field name="model">patient</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id"/>
+                <field name="name"/>
+                <field name="image"/>
+                <field name="ref"/>
+                <field name="gender"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <field name="image" widget="image" class="o_kanban_image_fill_left"
+                                   options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"/>
+                            <div class="oe_kanban_details">
+                                <strong class="title">
+                                    <field name="name"/>
+                                </strong>
+                                <ul>
+                                    <li>Gender:
+                                        <field name="gender"/>
+                                    </li>
+                                    <li>Reference:
+                                        <field name="ref"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <!-- the tree view = list view -->
+    <record id="view_patient_tree" model="ir.ui.view">
+        <field name="name">patient.tree</field>
+        <field name="model">patient</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="ref"/>
+                <field name="age" avg="Average Age"/>
+                <!--<field name="appointment_count" sum="Total Appointment"/>-->
+                <field name="gender"/>
+                <!--<field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>-->
+            </tree>
+        </field>
+    </record>
+
+    <!-- the form view -->
+    <record id="view_patient_form" model="ir.ui.view">
+        <field name="name">patient.form</field>
+        <field name="model">patient</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <!--                    <div name="button_box" class="oe_button_box">-->
+                    <!--                        <button name="action_view_appointments" class="oe_stat_button" type="object" icon="fa-star">-->
+                    <!--                            <field name="appointment_count" string="Appointment" widget="statinfo"/>-->
+                    <!--                        </button>-->
+                    <!--                    </div>-->
+                    <!-- (alert-info blew color) (alert-success green color) -->
+                    <!-- (alert-danger red color) (alert-warning yellow color) -->
+                    <div class="alert alert-info o_form_header row" role="alert" invisible="is_birthday == False">
+                        <div class="col-11 text-center">
+                            <div>
+                                <strong>Today is Birthday !</strong>
+                            </div>
+                            <div>Wish
+                                <field name="name" readonly="1"/>
+                            </div>
+                        </div>
+                        <a class="close col-1 text-end fs-2" data-dismiss="alert" href="#">x</a>
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h4>
+                            <field name="ref" readonly="1"/>
+                        </h4>
+                        <h2>
+                            <!-- class="oe_edit_only" appear label when you enter value in field only -->
+                            <label for="name" string="Name" class="oe_edit_only"/>
+                            <field name="name"/>
+                        </h2>
+                    </div>
+                    <group string="data">
+                        <group>
+
+                            <field name="date_of_birth"/>
+                            <field name="age"/>
+                            <field name="gender"/>
+                            <!--<field name="operation_id"/>-->
+                            <!--<field name="patient_apporintent"/>-->
+                            <!--<button name="action_confirm" string="Confirm" type="object" class="oe_highlight"/>-->
+                        </group>
+                        <group>
+                            <!--<field name="appointment_count"/>-->
+                            <field name="is_birthday" invisible="1"/>
+                            <!-- widget="many2many_tags" -->
+                            <!--<field name="tag_ids" widget="many2many_checkboxes" options="{'color_field': 'color'}"/>-->
+                            <!--<field name="active" invisible="1"/>-->
+                        </group>
+                    </group>
+                    <group string="Other information" name="other_info">
+                        <group>
+                            <!-- &lt; (<), &amp; (&), &gt; (>), &quot; ("), and &apos; (') -->
+                            <field name="parent" invisible="(age &gt;= 18) or (gender == 'male')"/>
+                            <field name="marital_status" invisible="(age &lt;= 18)"/>
+                            <field name="partner_name"/>
+                        </group>
+                        <group>
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                            <field name="website" widget="url"/>
+                        </group>
+                    </group>
+                    <!--                    <notebook>-->
+                    <!--                        <page name="appointment" string="Appointment">-->
+                    <!--                            <field name="appointment_ids">-->
+                    <!--                                &lt;!&ndash; <tree editable="bottom" and value in the bottom &ndash;&gt;-->
+                    <!--                                &lt;!&ndash; <tree editable="tip" and value in the tip &ndash;&gt;-->
+                    <!--                                <tree>-->
+                    <!--                                    <field name="patient_id"/>-->
+                    <!--                                    <field name="ref"/>-->
+                    <!--                                    <field name="gender"/>-->
+                    <!--                                </tree>-->
+                    <!--                                <form>-->
+                    <!--                                    <group>-->
+                    <!--                                        <field name="patient_id"/>-->
+                    <!--                                        <field name="ref"/>-->
+                    <!--                                    </group>-->
+                    <!--                                    <group>-->
+                    <!--                                        <field name="gender"/>-->
+                    <!--                                    </group>-->
+                    <!--                                </form>-->
+                    <!--                            </field>-->
+                    <!--                        </page>-->
+                    <!--                    </notebook>-->
+                </sheet>
+                <!-- chatter -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- the search view -->
+    <record id="view_patient_search" model="ir.ui.view">
+        <field name="name">patient.search</field>
+        <field name="model">patient</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="patient name"
+                       filter_domain="['|', ('name', 'ilike', self), ('ref', 'ilike', self)]"/>
+                <field name="ref"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <!--<filter name="filter_male" string="Male" domain="[('gender','=','male')]"/>-->
+                <!--<separator/> &lt;!&ndash; To separate the elements &ndash;&gt;-->
+                <!--filter name="filter_female" string="female" domain="[('gender','=','female')]"/>-->
+                <!--<separator/>-->
+                <!--<filter name="filter_kids" string="kids" domain="[('age','&lt;=','10')]"/>-->
+                <!--<separator/>-->
+                <!--<filter name="filter_archive" string="archive" domain="[('active','=',False)]"/>-->
+                <!--<group expand="0" string="Group By">-->
+                <!--<filter name="group_by_gender" string="Gender" context="{'group_by':'gender'}"/>-->
+                <!--</group>-->
+                <!-- create search-panel -->
+                <!--<searchpanel>-->
+                <!--<field name="gender" icon="fa-users" select="multi" enable_counters="1"/>-->
+                <!--</searchpanel>-->
+            </search>
+        </field>
+    </record>
+
+    <record id="action_patient" model="ir.actions.act_window">
+        <field name="name">patient</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">patient</field>
+        <field name="view_mode">tree,form,kanban,pivot</field>
+        <field name="context">{}</field>
+        <!--<field name="context">{'search_default_filter_male':1,'search_default_group_by_gender':1}</field>-->
+        <!--<field name="context">{'active_test':False}</field>-->
+        <field name="help" type="html">
+            <p>
+                create the module patient
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="patient_menu"
+              name="Patient"
+              parent="main_patient_menu"
+              action="action_patient"
+              sequence="0"/>
+</odoo>

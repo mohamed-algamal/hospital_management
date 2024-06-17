@@ -1,52 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <!-- root menu -->
-    <menuitem id="hospital_root_menu"
-              name="Hospital"
-              web_icon="om_hospital/static/description/icon.png"
+    <menuitem id="main_hospital_menu"
+              name="Hospital"/>
+
+    <menuitem id="main_patient_menu"
+              name="Patient"
+              parent="main_hospital_menu"
               sequence="0"/>
-
-    <!-- submenu from root menu -->
-    <menuitem id="menu_patient_details"
-              name="Patient Details"
-              parent="menu_hospital_root"
-              sequence="0"/>
-
-    <!-- submenu from root menu-->
-    <menuitem id="menu_apporintent_root"
-              name="apporintent"
-              parent="menu_hospital_root"
-              sequence="10"/>
-
-    <!-- submenu from root menu-->
-    <menuitem id="menu_patient_tag"
-              name="Patient Tag"
-              parent="menu_hospital_root"
-              sequence="20"/>
-
-    <!-- submenu from apporintent link with action in wizard-->
-    <menuitem id="menu_cancel_apporintent"
-              name="cancellation"
-              parent="menu_apporintent_root"
-              action="action_cancel_apporintent"
-              sequence="30"/>
-
-    <!-- submenu from a hospital link with action in wizard-->
-    <menuitem id="menu_report"
-              name="Report"
-              parent="menu_hospital_root"
-              sequence="50"/>
-
-    <!-- submenu from a hospital link with action in wizard-->
-    <menuitem id="menu_report_appointment_wizard"
-              name="Report Appointment"
-              parent="menu_report"
-              action="action_report_appointment_wizard"
-              sequence="10"/>
-
-    <menuitem id="menu_report_all_patient"
-              name="Report Patient"
-              parent="menu_report"
-              action="action_report_all_patient"
-              sequence="20"/>
 </odoo>
+
