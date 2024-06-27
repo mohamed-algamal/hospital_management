@@ -9,10 +9,13 @@
     'data': [
         # 'security/security.xml',
         'security/ir.model.access.csv',
-        # 'data/sequence_data.xml',
+        'data/sequence_data.xml',
         # 'data/mail_template_data.xml',
-        # 'wizard/cancel_apporintent_view.xml',
-        'views/menu.xml',
+        'wizard/cancel_appointment_view.xml',
+        'views/menu_view.xml',
+        'views/patient_view.xml',
+        'views/appointment_view.xml',
+        'views/medication.xml',
         # 'report/report.xml',
 
     ],

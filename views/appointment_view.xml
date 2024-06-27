@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_appointment_tree" model="ir.ui.view">
+        <field name="name">appointment.tree</field>
+        <field name="model">appointment</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'"
+                  decoration-warning="state  == 'in_consultation'"
+                  decoration-success="state == 'done'"
+                  decoration-danger="state == 'cancel'" sample="1" multi_edit="1">
+                <field name="patient_id"/>
+                <field name="ref" optional="hide"/>
+                <field name="gender" optional="show"/>
+                <field name="appointment_time"/>
+                <field name="doctor_id"/>
+                <field name="nurse_id"/>
+                <field name="activity_ids" widget="list_activity"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                       decoration-warning="state  == 'in_consultation'" decoration-success="state == 'done'"
+                       decoration-danger="state == 'cancel'"/>
+                <field name="progress" widget="progressbar"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- the form view -->
+    <record id="view_appointment_form" model="ir.ui.view">
+        <field name="name">appointment.form</field>
+        <field name="model">appointment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" nolabel="1"
+                           statusbar_visible="draft,in_consultation,done"/>
+                    <button name="action_in_consultation" string="In Consultation" type="object" class="oe_highlight"
+                            invisible="state != 'draft'" data-hotkey="z"/>
+                    <button name="action_done" string="Done" type="object" class="oe_highlight"
+                            invisible="state != 'in_consultation'" data-hotkey="s"/>
+                    <button name="action_draft" string="Draft" type="object" invisible="state != 'cancel'"
+                            data-hotkey="x"/>
+                    <button name="%(hospital_management.action_cancel_appointment)d" string="Cancel"
+                                    type="action" class="oe_highlight"/>
+<!--                    <button name="action_cancel" string="Cancel" type="object" class="oe_highlight"-->
+<!--                            invisible="state in ['draft' , 'cancel', 'done']" data-hotkey="f"/>-->
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="ref"/>
+                            <field name="gender"/>
+                            <field name="doctor_id"/>
+                            <field name="nurse_id"/>
+                        </group>
+                        <group>
+                            <field name="appointment_time"/>
+                            <field name="progress" widget="progressbar" options="{'max_value': '100'}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="Pharmacy" string="Pharmacy">
+                            <field name="pharmacy_line_ids">
+                                <tree editable="bottom">
+                                    <field name="sl_no" readonly="1"/>
+                                    <field name="medication_id"/>
+                                    <field name="price_unit"/>
+                                    <field name="qty"/>
+                                    <field name="total_price"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="sl_no"/>
+                                        <field name="medication_id"/>
+                                        <field name="price_unit"/>
+                                    </group>
+                                    <group>
+                                        <field name="qty"/>
+                                        <field name="total_price"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page name="Prescription" string="Prescription">
+                            <field name="prescription" placeholder="Enter your prescription."
+                                   options="{'collaborative':true, 'resizable':true, 'codeview':true}"/>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- window action -->
+    <record id="action_appointment" model="ir.actions.act_window">
+        <field name="name">appointment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">appointment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p>
+                create the module appointment.
+            </p>
+        </field>
+    </record>
+
+    <!-- the submenu -->
+    <menuitem id="appointment_manu"
+              name="Appointment"
+              parent="main_appointment_menu"
+              action="action_appointment"
+              sequence="10"/>
+
+</odoo>

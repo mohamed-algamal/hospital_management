@@ -47,6 +47,7 @@
                 <field name="name"/>
                 <field name="ref"/>
                 <field name="age" avg="Average Age"/>
+                <field name="doctor_ids"/>
                 <!--<field name="appointment_count" sum="Total Appointment"/>-->
                 <field name="gender"/>
                 <!--<field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>-->
@@ -81,21 +82,26 @@
                     </div>
                     <field name="image" widget="image" class="oe_avatar"/>
                     <div class="oe_title">
-                        <h4>
-                            <field name="ref" readonly="1"/>
-                        </h4>
+
                         <h2>
                             <!-- class="oe_edit_only" appear label when you enter value in field only -->
                             <label for="name" string="Name" class="oe_edit_only"/>
                             <field name="name"/>
                         </h2>
+                        <group>
+                            <h4>
+                                <label for="ref" string="Reference" class="oe_edit_only"/>
+                                <field name="ref" readonly="1"/>
+                            </h4>
+                        </group>
+
                     </div>
                     <group string="data">
                         <group>
-
                             <field name="date_of_birth"/>
                             <field name="age"/>
                             <field name="gender"/>
+                            <field name="doctor_ids" widget="many2many_tags"/>
                             <!--<field name="operation_id"/>-->
                             <!--<field name="patient_apporintent"/>-->
                             <!--<button name="action_confirm" string="Confirm" type="object" class="oe_highlight"/>-->
@@ -113,7 +119,7 @@
                             <!-- &lt; (<), &amp; (&), &gt; (>), &quot; ("), and &apos; (') -->
                             <field name="parent" invisible="(age &gt;= 18) or (gender == 'male')"/>
                             <field name="marital_status" invisible="(age &lt;= 18)"/>
-                            <field name="partner_name"/>
+                            <field name="partner_name" required="(age &lt;= 18)"/>
                         </group>
                         <group>
                             <field name="phone" widget="phone"/>
@@ -165,20 +171,19 @@
                 <field name="ref"/>
                 <field name="age"/>
                 <field name="gender"/>
-                <!--<filter name="filter_male" string="Male" domain="[('gender','=','male')]"/>-->
-                <!--<separator/> &lt;!&ndash; To separate the elements &ndash;&gt;-->
-                <!--filter name="filter_female" string="female" domain="[('gender','=','female')]"/>-->
-                <!--<separator/>-->
-                <!--<filter name="filter_kids" string="kids" domain="[('age','&lt;=','10')]"/>-->
-                <!--<separator/>-->
+                <filter name="filter_male" string="Male" domain="[('gender','=','male')]"/>
+                <separator/> <!-- To separate the elements -->
+                <filter name="filter_female" string="female" domain="[('gender','=','female')]"/>
+                <separator/>
+                <filter name="filter_kids" string="kids" domain="[('age','&lt;=','10')]"/>
+                <separator/>
                 <!--<filter name="filter_archive" string="archive" domain="[('active','=',False)]"/>-->
-                <!--<group expand="0" string="Group By">-->
-                <!--<filter name="group_by_gender" string="Gender" context="{'group_by':'gender'}"/>-->
-                <!--</group>-->
-                <!-- create search-panel -->
-                <!--<searchpanel>-->
-                <!--<field name="gender" icon="fa-users" select="multi" enable_counters="1"/>-->
-                <!--</searchpanel>-->
+                <group expand="0" string="Group By">
+                    <filter name="group_by_gender" string="Gender" context="{'group_by':'gender'}"/>
+                </group>
+                <searchpanel>
+                    <field name="gender" icon="fa-users" select="multi" enable_counters="1"/>
+                </searchpanel>
             </search>
         </field>
     </record>
@@ -187,7 +192,7 @@
         <field name="name">patient</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">patient</field>
-        <field name="view_mode">tree,form,kanban,pivot</field>
+        <field name="view_mode">tree,form,kanban</field>
         <field name="context">{}</field>
         <!--<field name="context">{'search_default_filter_male':1,'search_default_group_by_gender':1}</field>-->
         <!--<field name="context">{'active_test':False}</field>-->

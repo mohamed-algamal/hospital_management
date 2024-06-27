@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- root menu -->
+    <!-- root menu number one -->
     <menuitem id="main_hospital_menu"
               name="Hospital"/>
 
     <menuitem id="main_patient_menu"
               name="Patient"
               parent="main_hospital_menu"
+              sequence="0"/>
+
+    <menuitem id="main_appointment_menu"
+              name="Appointment"
+              parent="main_hospital_menu"
+              sequence="10"/>
+
+<!--    <menuitem id="cancel_appointment_menu"-->
+<!--              name="Cancel Appointment"-->
+<!--              parent="main_appointment_menu"-->
+<!--              action="action_cancel_appointment"-->
+<!--              sequence="10"/>-->
+
+    <!-- root menu number two -->
+    <menuitem id="main_pharmacy_menu"
+              name="Pharmacy"/>
+
+    <menuitem id="main_medication_menu"
+              name="Medication"
+              parent="main_pharmacy_menu"
               sequence="0"/>
 </odoo>
 

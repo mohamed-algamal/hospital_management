@@ -19,6 +19,7 @@ class Patient(models.Model):
     # patient_ = fields.Many2one('hospital.appointment', string='appointment')
     # appointment_count = fields.Integer(string='Appointment count', compute='_compute_appointment_count', store=True)
     # appointment_ids = fields.One2many('hospital.appointment', 'patient_id', string='Appointment')
+    doctor_ids = fields.Many2many(comodel_name='res.users', string='Doctors', tracking=True)
     parent = fields.Char(string='Parent')
     partner_name = fields.Char(string='Partner Name')
     marital_status = fields.Selection([
@@ -48,4 +49,9 @@ class Patient(models.Model):
             if rec.date_of_birth:
                 if date.today().day == rec.date_of_birth.day and date.today().month == rec.date_of_birth.month:
                     rec.is_birthday = True
+
+    @api.model
+    def create(self, vals):
+        vals['ref'] = self.env['ir.sequence'].next_by_code('patient')
+        return super(Patient, self).create(vals)
 
