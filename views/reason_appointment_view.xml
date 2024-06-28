@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- the tree view = list view -->
+    <record id="view_reason_cancel_appointment_tree" model="ir.ui.view">
+        <field name="name">reason.cancel.appointment.tree</field>
+        <field name="model">reason.cancel.appointment</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false" delete="false">
+                <field name="appointment_id"/>
+                <field name="patient"/>
+                <field name="user_id"/>
+                <field name="reason"/>
+                <field name="data_cancel"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- the form view -->
+    <record id="view_reason_cancel_appointment_form" model="ir.ui.view">
+        <field name="name">reason.cancel.appointment.form</field>
+        <field name="model">reason.cancel.appointment</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false" delete="false">
+                <group>
+                    <group>
+                        <field name="appointment_id"/>
+                        <field name="patient"/>
+                        <field name="user_id"/>
+                    </group>
+                    <group>
+                        <field name="reason"/>
+                        <field name="data_cancel"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_reason_cancel_appointment" model="ir.actions.act_window">
+        <field name="name">Reason Cancel Appointment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">reason.cancel.appointment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p>
+                create the module Reason Cancel Appointment
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="reason_cancel_appointment_menu"
+              name="Reason Cancel Appointment"
+              parent="main_appointment_menu"
+              action="action_reason_cancel_appointment"
+              sequence="10"/>
+</odoo>

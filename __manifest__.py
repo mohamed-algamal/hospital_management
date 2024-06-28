@@ -16,6 +16,8 @@
         'views/patient_view.xml',
         'views/appointment_view.xml',
         'views/medication.xml',
+        'views/reason_appointment_view.xml',
+        'views/operation_view.xml',
         # 'report/report.xml',
 
     ],
