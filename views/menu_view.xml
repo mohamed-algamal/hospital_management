@@ -9,24 +9,19 @@
               parent="main_hospital_menu"
               sequence="0"/>
 
-    <menuitem id="main_appointment_menu"
-              name="Appointment"
+    <menuitem id="main_pharmacy_menu"
+              name="Pharmacy"
               parent="main_hospital_menu"
               sequence="10"/>
 
-<!--    <menuitem id="cancel_appointment_menu"-->
-<!--              name="Cancel Appointment"-->
-<!--              parent="main_appointment_menu"-->
-<!--              action="action_cancel_appointment"-->
-<!--              sequence="10"/>-->
+    <menuitem id="main_appointment_menu"
+              name="Appointment"
+              parent="main_hospital_menu"
+              sequence="20"/>
 
-    <!-- root menu number two -->
-    <menuitem id="main_pharmacy_menu"
-              name="Pharmacy"/>
-
-    <menuitem id="main_medication_menu"
-              name="Medication"
-              parent="main_pharmacy_menu"
-              sequence="0"/>
+    <menuitem id="main_operation_menu"
+              name="Operation"
+              parent="main_hospital_menu"
+              sequence="30"/>
 </odoo>
 
