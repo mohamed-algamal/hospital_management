@@ -48,9 +48,9 @@
         </field>
     </record>
 
-    <menuitem id="medication_menu"
-              name="medication"
-              parent="main_medication_menu"
+        <menuitem id="main_medication_menu"
+              name="Medication"
+              parent="main_pharmacy_menu"
               action="action_medication"
               sequence="0"/>
 </odoo>

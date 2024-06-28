@@ -48,9 +48,9 @@
                 <field name="ref"/>
                 <field name="age" avg="Average Age"/>
                 <field name="doctor_ids"/>
-                <!--<field name="appointment_count" sum="Total Appointment"/>-->
+                <field name="appointment_count" sum="Total Appointment"/>
+                <field name="operation_count" sum="Total Appointment"/>
                 <field name="gender"/>
-                <!--<field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>-->
             </tree>
         </field>
     </record>
@@ -62,11 +62,14 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <!--                    <div name="button_box" class="oe_button_box">-->
-                    <!--                        <button name="action_view_appointments" class="oe_stat_button" type="object" icon="fa-star">-->
-                    <!--                            <field name="appointment_count" string="Appointment" widget="statinfo"/>-->
-                    <!--                        </button>-->
-                    <!--                    </div>-->
+                    <div name="button_box" class="oe_button_box">
+                        <button name="action_view_appointments" class="oe_stat_button" type="object" icon="fa-star">
+                            <field name="appointment_count" string="Appointment" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_operation" class="oe_stat_button" type="object" icon="fa-star">
+                            <field name="operation_count" string="Operation" widget="statinfo"/>
+                        </button>
+                    </div>
                     <!-- (alert-info blew color) (alert-success green color) -->
                     <!-- (alert-danger red color) (alert-warning yellow color) -->
                     <div class="alert alert-info o_form_header row" role="alert" invisible="is_birthday == False">
@@ -102,16 +105,11 @@
                             <field name="age"/>
                             <field name="gender"/>
                             <field name="doctor_ids" widget="many2many_tags"/>
-                            <!--<field name="operation_id"/>-->
-                            <!--<field name="patient_apporintent"/>-->
-                            <!--<button name="action_confirm" string="Confirm" type="object" class="oe_highlight"/>-->
                         </group>
                         <group>
-                            <!--<field name="appointment_count"/>-->
+                            <field name="appointment_count" readonly="1"/>
+                            <field name="operation_count" readonly="1"/>
                             <field name="is_birthday" invisible="1"/>
-                            <!-- widget="many2many_tags" -->
-                            <!--<field name="tag_ids" widget="many2many_checkboxes" options="{'color_field': 'color'}"/>-->
-                            <!--<field name="active" invisible="1"/>-->
                         </group>
                     </group>
                     <group string="Other information" name="other_info">
@@ -127,28 +125,6 @@
                             <field name="website" widget="url"/>
                         </group>
                     </group>
-                    <!--                    <notebook>-->
-                    <!--                        <page name="appointment" string="Appointment">-->
-                    <!--                            <field name="appointment_ids">-->
-                    <!--                                &lt;!&ndash; <tree editable="bottom" and value in the bottom &ndash;&gt;-->
-                    <!--                                &lt;!&ndash; <tree editable="tip" and value in the tip &ndash;&gt;-->
-                    <!--                                <tree>-->
-                    <!--                                    <field name="patient_id"/>-->
-                    <!--                                    <field name="ref"/>-->
-                    <!--                                    <field name="gender"/>-->
-                    <!--                                </tree>-->
-                    <!--                                <form>-->
-                    <!--                                    <group>-->
-                    <!--                                        <field name="patient_id"/>-->
-                    <!--                                        <field name="ref"/>-->
-                    <!--                                    </group>-->
-                    <!--                                    <group>-->
-                    <!--                                        <field name="gender"/>-->
-                    <!--                                    </group>-->
-                    <!--                                </form>-->
-                    <!--                            </field>-->
-                    <!--                        </page>-->
-                    <!--                    </notebook>-->
                 </sheet>
                 <!-- chatter -->
                 <div class="oe_chatter">

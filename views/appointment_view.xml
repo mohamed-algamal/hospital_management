@@ -37,12 +37,8 @@
                             invisible="state != 'draft'" data-hotkey="z"/>
                     <button name="action_done" string="Done" type="object" class="oe_highlight"
                             invisible="state != 'in_consultation'" data-hotkey="s"/>
-                    <button name="action_draft" string="Draft" type="object" invisible="state != 'cancel'"
-                            data-hotkey="x"/>
                     <button name="%(hospital_management.action_cancel_appointment)d" string="Cancel"
-                                    type="action" class="oe_highlight"/>
-<!--                    <button name="action_cancel" string="Cancel" type="object" class="oe_highlight"-->
-<!--                            invisible="state in ['draft' , 'cancel', 'done']" data-hotkey="f"/>-->
+                                    type="action" class="oe_highlight" invisible="state in ['draft' , 'cancel', 'done']"/>
                 </header>
                 <sheet>
                     <group>

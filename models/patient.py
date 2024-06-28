@@ -17,8 +17,10 @@ class Patient(models.Model):
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')], string='gender')
     image = fields.Image(string='Image')
     # patient_ = fields.Many2one('hospital.appointment', string='appointment')
-    # appointment_count = fields.Integer(string='Appointment count', compute='_compute_appointment_count', store=True)
-    # appointment_ids = fields.One2many('hospital.appointment', 'patient_id', string='Appointment')
+    appointment_count = fields.Integer(string='Appointment Count', compute='_compute_appointment_count', store=True)
+    appointment_ids = fields.One2many('appointment', 'patient_id', string='Appointment')
+    operation_count = fields.Integer(string='Operation Count', compute='_compute_operation_count', store=True)
+    operation_ids = fields.One2many('operation', 'patient_id', string='Operation')
     doctor_ids = fields.Many2many(comodel_name='res.users', string='Doctors', tracking=True)
     parent = fields.Char(string='Parent')
     partner_name = fields.Char(string='Partner Name')
@@ -33,6 +35,66 @@ class Patient(models.Model):
     email = fields.Char(string="Email")
     website = fields.Char(string="Website")
 
+    def action_view_appointments(self):
+        return {  # button box
+            'name': _('Appointments'),  # any name you want
+            'res_model': 'appointment',  # the name model have the views
+            'view_mode': 'tree,form',  # any view you want show
+            'context': {
+                'patient_id': self.id
+            },  # enter the default value
+            'domain': [('patient_id', '=', self.id)],  # set the condition
+            'target': 'current',  # current and new and inline
+            'type': 'ir.actions.act_window',
+        }
+
+    def action_view_operation(self):
+        return {  # button box
+            'name': _('Operation'),  # any name you want
+            'res_model': 'operation',  # the name model have the views
+            'view_mode': 'tree,form',  # any view you want show
+            'context': {
+                'patient_id': self.id
+            },  # enter the default value
+            'domain': [('patient_id', '=', self.id)],  # set the condition
+            'target': 'current',  # current and new and inline
+            'type': 'ir.actions.act_window',
+        }
+    
+    @api.depends('operation_ids')
+    def _compute_operation_count(self):  # stored computed field
+        # operation_group = self.env['operation'].read_group(domain=[], fields=['patient_id'], groupby=['patient_id'])
+        # # print("appointment_group > ", appointment_group)
+        # for operation in operation_group:
+        #     # print("appointment > ", appointment)
+        #     patient_id = operation.get('patient_id')[0]
+        #     # print("patient_id > ", patient_id)
+        #     patient_rec = self.browse(patient_id)
+        #     # print("patient_rec > ", patient_rec)
+        #     patient_rec.operation_count = operation['patient_id_count']
+        #     self -= patient_rec
+        # self.operation_count = 0
+        count = self.env['operation'].search_count([('patient_id', '=', self.id)])
+        self.operation_count = count
+
+
+    @api.depends('appointment_ids')
+    def _compute_appointment_count(self):  # stored computed field
+        # appointment_group = self.env['appointment'].read_group(domain=[], fields=['patient_id'],
+        #                                                        groupby=['patient_id'])
+        # print("appointment_group > ", appointment_group)
+        # for appointment in appointment_group:
+        #     print("appointment > ", appointment)
+        #     patient_id = appointment.get('patient_id')[0]
+        #     print("patient_id > ", patient_id)
+        #     patient_rec = self.browse(patient_id)
+        #     print("patient_rec > ", patient_rec)
+        #     patient_rec.appointment_count = appointment['patient_id_count']
+        #     self -= patient_rec
+        # self.appointment_count = 0
+        count = self.env['appointment'].search_count([('patient_id', '=', self.id )])
+        self.appointment_count = count
+        
     @api.depends('date_of_birth')
     def _compute_age(self):
         for rec in self:

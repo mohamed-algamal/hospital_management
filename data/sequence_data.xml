@@ -23,4 +23,12 @@
         <field name="padding">4</field> <!-- many number after prefix -->
         <field name="company_id" eval="False"/>
     </record>
+
+    <record id="seq_operation" model="ir.sequence"> <!-- id anything you went -->
+        <field name="name">operation</field> <!-- name anything you went -->
+        <field name="code">operation</field> <!-- code anything you went -->
+        <field name="prefix">op</field>
+        <field name="padding">4</field> <!-- many number after prefix -->
+        <field name="company_id" eval="False"/>
+    </record>
 </odoo>

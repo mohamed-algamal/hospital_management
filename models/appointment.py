@@ -9,12 +9,12 @@ class Appointment(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Appointment"
     _rec_name = "ref"
+    _order = 'id desc'
 
-    patient_id = fields.Many2one(comodel_name='patient', string='Patient', tracking=1)
+    patient_id = fields.Many2one(comodel_name='patient', string='Patient', tracking=1, required=True)
     gender = fields.Selection(related='patient_id.gender')
-    appointment_time = fields.Datetime(string='appointment Time', default=fields.Datetime.now)
-    booking_date = fields.Date(string='Booking Date', default=fields.Date.context_today)
-    ref = fields.Char(string='reference', readonly=True)
+    appointment_time = fields.Datetime(string='Appointment Time', default=fields.Datetime.now, readonly=True)
+    ref = fields.Char(string='Reference', readonly=True)
     prescription = fields.Html(string="Prescription")
     priority = fields.Selection([
         ('0', 'Normal'),
@@ -26,13 +26,12 @@ class Appointment(models.Model):
         ('in_consultation', 'In consultation'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')], default='draft', string='Status', required=True)
-    doctor_id = fields.Many2one(comodel_name='res.users', string='Doctor', tracking=True)
-    nurse_id = fields.Many2one(comodel_name='res.users', string='Nurse', tracking=True)
-    color = fields.Integer(string='color')
+    doctor_id = fields.Many2one(comodel_name='res.users', string='Doctor', tracking=True, required=True)
+    nurse_id = fields.Many2one(comodel_name='res.users', string='Nurse', tracking=True, required=True)
     pharmacy_line_ids = fields.One2many('appointment.pharmacy.lines', 'appointment_id', string='Pharmacy Lines')
     progress = fields.Integer(string='Progress', compute='_compute_progress')
-    duration = fields.Float(string='Duration')
     check_done = fields.Boolean()
+    check_cansel = fields.Boolean()
     # company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     # currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
@@ -41,14 +40,6 @@ class Appointment(models.Model):
         for line in self.pharmacy_line_ids:
             sl_no += 1
             line.sl_no = sl_no
-
-    # def check_record_done(self):
-    #     check_records = self.env['hospital.apporintent'].search()
-    #     cancel_day = self.env['ir.config_parameter'].sudo().get_param('om_hospital.cancel_days')
-    #     days = (date.today() - self.apporintent_id.booking_date).days
-    #     for rec in check_records:
-    #         if int(cancel_day) != 0 and days <= int(cancel_day):
-    #             rec.check_done = True
 
     @api.model
     def create(self, vals):
@@ -74,21 +65,22 @@ class Appointment(models.Model):
                 rec.state = 'in_consultation'
 
     def action_done(self):
-        self.state = 'done'
-        return {
-            'effect': {
-                'fadeout': 'slow',
-                'message': 'Done',
-                'type': 'rainbow_man',
+        for rec in self:
+            self.state = 'done'
+            rec.check_done = True
+            return {
+                'effect': {
+                    'fadeout': 'slow',
+                    'message': 'Done',
+                    'type': 'rainbow_man',
+                }
             }
-        }
 
     def action_cancel(self):
-        action = self.env.ref('hospital_management.action_cancel_appointment').read()[0]
-        return action
-
-    def action_draft(self):
-        self.state = 'draft'
+        for rec in self:
+            rec.check_cansel = True
+            action = rec.env.ref('hospital_management.action_cancel_appointment').read()[0]
+            return action
 
     # def action_notification(self):
     #     # message = "it's work."
@@ -160,10 +152,3 @@ class AppointmentPharmacyLines(models.Model):
     def _compute_price_unit(self):
         for rec in self:
             rec.price_unit = rec.medication_id.price
-
-    # @api.onchange('field_name')  # this for stored the data in database
-    # def _onchange_field_name(self, value):
-    #     # Perform calculations or logic
-    #     self.calculated_field =  # Your calculation result
-    #     # Save the calculated value to the database
-    #     self.write({'calculated_field': self.calculated_field})
