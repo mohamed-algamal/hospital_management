@@ -4,15 +4,16 @@ from datetime import date
 from odoo.exceptions import ValidationError
 
 
-class ReasonCancelAppointment(models.Model):
-    _name = 'reason.cancel.appointment'
-    _description = 'Reason Cancel Appointment'
+class ReasonCancel(models.Model):
+    _name = 'reason.cancel'
+    _description = 'Reason Cancel'
 
-    appointment_id = fields.Many2one('appointment', string='Appointment', readonly=True)
+    name = fields.Char(string='Name')
     patient = fields.Char(string='Patient', readonly=True)
     user_id = fields.Many2one('res.users', string='User', readonly=True)
     reason = fields.Text(string='Reason', required=True)
     data_cancel = fields.Date(string='Cancel Date', readonly=True)
-
-
+    type = fields.Selection([
+        ('appointment', 'Appointment'),
+        ('operation', 'Operation'), ], string='Type', readonly=True)
 

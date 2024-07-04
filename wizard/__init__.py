@@ -1,2 +1,2 @@
-from . import cancel_appointment
+from . import cancel_wizard
 

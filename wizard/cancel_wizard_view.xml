@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <!-- the form view -->
-    <record id="view_cancel_appointment_form" model="ir.ui.view">
-        <field name="name">cancel.appointment.form</field>
-        <field name="model">cancel.appointment.wizard</field>
+    <record id="view_cancel_wizard_form" model="ir.ui.view">
+        <field name="name">cancel.form</field>
+        <field name="model">cancel.wizard</field>
         <field name="arch" type="xml">
             <form>
                 <group>
                     <group>
-                        <field name="appointment_id"/>
+                        <field name="appointment_id" invisible="operation_id"/>
+                        <field name="operation_id" invisible="appointment_id"/>
                         <field name="patient"/>
                         <field name="user_id"/>
                     </group>
@@ -18,7 +19,8 @@
                     </group>
                 </group>
                 <footer>
-                    <button name="action_cancel" string="Cancel Appointment" type="object" data-hotkey="q" class="btn-primary"/>
+                    <button name="action_cancel" string="Cancel" type="object" data-hotkey="q"
+                            class="btn-primary"/>
                     <button string="Discard" special="cancel" data-hotkey="z" class="btn-secondary"/>
                 </footer>
             </form>
@@ -26,10 +28,10 @@
     </record>
 
     <!-- window action -->
-    <record id="action_cancel_appointment" model="ir.actions.act_window">
-        <field name="name">Cancel Appointment</field>
+    <record id="action_cancel_wizard" model="ir.actions.act_window">
+        <field name="name">Cancel Wizard</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">cancel.appointment.wizard</field>
+        <field name="res_model">cancel.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field> <!-- because appear pop view -->
     </record>
