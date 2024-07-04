@@ -31,7 +31,7 @@ class Appointment(models.Model):
     pharmacy_line_ids = fields.One2many('appointment.pharmacy.lines', 'appointment_id', string='Pharmacy Lines')
     progress = fields.Integer(string='Progress', compute='_compute_progress')
     check_done = fields.Boolean()
-    check_cansel = fields.Boolean()
+    check_cancel = fields.Boolean()
     # company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     # currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
 
@@ -82,33 +82,6 @@ class Appointment(models.Model):
             action = rec.env.ref('hospital_management.action_cancel_appointment').read()[0]
             return action
 
-    # def action_notification(self):
-    #     # message = "it's work."
-    #     action = self.env.ref('om_hospital.action_hospital_patient')  # write external id for action for model
-    #     return {
-    #         'type': 'ir.actions.client',
-    #         'tag': 'display_notification',
-    #         'params': {
-    #             'title': _('click to open the patient record.'),
-    #             'message': '%s',  # for massage appear in notification
-    #             'links': [{
-    #                 'label': 'patient',
-    #                 # 'label': self.patient_id.name,
-    #                 'url': f'#action={action.id}&id={self.patient_id.id}&model=hospital.patient'
-    #             }],
-    #             # all window action have id
-    #             #  'sticky': True,  # for doesn't remove form screen
-    #             'sticky': False,  # for automatically disappear
-    #             'type': 'success',  # for color
-    #             'next': {
-    #                 'type': 'ir.actions.act_window',
-    #                 'res_model': 'hospital.patient',
-    #                 'res_id': self.patient_id.id,
-    #                 'views': [(False, 'form')],
-    #             },
-    #         }
-    #     }
-
     # def action_send_email(self):
     #     template = self.env.ref('om_hospital.appointment_mail_template')  # external id for email template
     #     for rec in self:
@@ -140,8 +113,6 @@ class AppointmentPharmacyLines(models.Model):
     qty = fields.Integer(string='Quantity', default=1)
     appointment_id = fields.Many2one('appointment', string='appointment')
     total_price = fields.Float(string='Total Price', compute='_compute_sum_price', store=True)
-
-    # currency_id = fields.Many2one('res.currency', related='appointment_id.currency_id')
 
     @api.depends('price_unit', 'qty')
     def _compute_sum_price(self):

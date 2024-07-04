@@ -5,12 +5,19 @@
         <field name="name">operation.tree</field>
         <field name="model">operation</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree decoration-info="state == 'draft'"
+                  decoration-warning="state  == 'prepare'"
+                  decoration-success="state == 'done'"
+                  decoration-danger="state == 'cancel'" sample="1" multi_edit="1">
                 <field name="patient_id"/>
                 <field name="name"/>
                 <field name="ref"/>
                 <field name="doctor_ids" widget="many2many_tags"/>
                 <field name="nurse_ids" widget="many2many_tags"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                       decoration-warning="state  == 'prepare'" decoration-success="state == 'done'"
+                       decoration-danger="state == 'cancel'"/>
+
             </tree>
         </field>
     </record>
@@ -21,21 +28,31 @@
         <field name="model">operation</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <field name="state" widget="statusbar" nolabel="1"
+                           statusbar_visible="draft,prepare,done"/>
+                    <button name="action_prepare" string="Prepare" type="object" class="oe_highlight"
+                            invisible="state != 'draft'" data-hotkey="z"/>
+                    <button name="action_done" string="Done" type="object" class="oe_highlight"
+                            invisible="state != 'prepare'" data-hotkey="s"/>
+                    <button name="%(hospital_management.action_cancel_wizard)d" string="Cancel"
+                            type="action" class="oe_highlight" invisible="state in ['draft' , 'cancel', 'done']"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
-                            <field name="patient_id"/>
-                            <field name="name"/>
-                            <field name="doctor_ids" widget="many2many_tags"/>
-                            <field name="nurse_ids" widget="many2many_tags"/>
+                            <field name="patient_id" readonly="check_done or check_cancel"/>
+                            <field name="name" readonly="check_done or check_cancel"/>
+                            <field name="doctor_ids" widget="many2many_tags" readonly="check_done or check_cancel"/>
+                            <field name="nurse_ids" widget="many2many_tags" readonly="check_done or check_cancel"/>
                         </group>
                         <group>
-                            <field name="ref"/>
+                            <field name="ref" readonly="check_done or check_cancel"/>
                         </group>
                     </group>
                     <notebook>
                         <page name="description" string="Description">
-                            <field name="description" placeholder="Enter Your Description."
+                            <field name="description" placeholder="Enter Your Description." readonly="check_done or check_cancel"
                                    options="{'collaborative':true, 'resizable':true, 'codeview':true}"/>
                         </page>
                     </notebook>

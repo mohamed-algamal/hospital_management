@@ -15,6 +15,13 @@ class Operation(models.Model):
     doctor_ids = fields.Many2many('res.users', 'doctor_operation_rel', 'doctor', 'users', string='Doctor')
     nurse_ids = fields.Many2many('res.users', 'nurse_operation_rel', 'nurse', 'users', string='Nurse')
     description = fields.Html(string='Description')
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('prepare', 'Prepare'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled')], default='draft', string='Status', required=True)
+    check_done = fields.Boolean()
+    check_cancel = fields.Boolean()
 
     @api.model
     def create(self, vals):
@@ -26,16 +33,12 @@ class Operation(models.Model):
             vals['ref'] = self.env['ir.sequence'].next_by_code('patient')
         return super(Operation, self).write(vals)
 
+    def action_prepare(self):
+        for rec in self:
+            rec.state = 'prepare'
 
+    def action_done(self):
+        for rec in self:
+            rec.state = 'done'
+            rec.check_done = True
 
-    # @api.model
-    # def name_create(self, name):  # create record from many2one field
-    #     return self.create({'operation_name': name}).name_get()[0]
-    #
-    # def name_get(self):
-    #     # patient_list = []
-    #     # for rec in self:
-    #     #     name = '[' + rec.ref + '] ' + rec.name
-    #     #     patient_list.append((rec.id, name)) # (rec.id, name) this is tuple append in list
-    #     # return patient_list
-    #     return [(rec.id, f"[{rec.ref}] and {rec.operation_name}") for rec in self]  # return tuple enter list
