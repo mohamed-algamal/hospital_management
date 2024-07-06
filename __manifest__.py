@@ -7,10 +7,11 @@
     'description': """hospital management task""",
     'depends': ['base', 'mail',],
     'data': [
-        # 'security/security.xml',
+        'security/security.xml',
         'security/ir.model.access.csv',
         'data/sequence_data.xml',
-        # 'data/mail_template_data.xml',
+        'data/mail_template_appointment.xml',
+        'data/mail_template_operation.xml',
         'wizard/cancel_wizard_view.xml',
         'views/menu_view.xml',
         'views/patient_view.xml',

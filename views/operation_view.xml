@@ -12,6 +12,7 @@
                 <field name="patient_id"/>
                 <field name="name"/>
                 <field name="ref"/>
+                <field name="gender"/>
                 <field name="doctor_ids" widget="many2many_tags"/>
                 <field name="nurse_ids" widget="many2many_tags"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'"
@@ -37,12 +38,15 @@
                             invisible="state != 'prepare'" data-hotkey="s"/>
                     <button name="%(hospital_management.action_cancel_wizard)d" string="Cancel"
                             type="action" class="oe_highlight" invisible="state in ['draft' , 'cancel', 'done']"/>
+                    <button name="action_send_email" string="Send Email" type="object" class="oe_highlight" icon="fa-envelope"
+                            invisible="state != 'done'" data-hotkey="s"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="patient_id" readonly="check_done or check_cancel"/>
                             <field name="name" readonly="check_done or check_cancel"/>
+                            <field name="gender"/>
                             <field name="doctor_ids" widget="many2many_tags" readonly="check_done or check_cancel"/>
                             <field name="nurse_ids" widget="many2many_tags" readonly="check_done or check_cancel"/>
                             <field name="check_done" invisible="1"/>

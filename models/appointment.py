@@ -12,7 +12,7 @@ class Appointment(models.Model):
     _order = 'id desc'
 
     patient_id = fields.Many2one(comodel_name='patient', string='Patient', tracking=1, required=True)
-    gender = fields.Selection(related='patient_id.gender')
+    gender = fields.Char(compute='_compute_gender', readonly=True)
     appointment_time = fields.Datetime(string='Appointment Time', default=fields.Datetime.now, readonly=True)
     ref = fields.Char(string='Reference', readonly=True)
     prescription = fields.Html(string="Prescription")
@@ -32,8 +32,12 @@ class Appointment(models.Model):
     progress = fields.Integer(string='Progress', compute='_compute_progress')
     check_done = fields.Boolean()
     check_cancel = fields.Boolean()
-    # company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
-    # currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
+    check_send_email = fields.Boolean()
+
+    @api.depends('patient_id')
+    def _compute_gender(self):
+        for rec in self:
+            rec.gender = rec.patient_id.gender
 
     def set_line_number(self):
         sl_no = 0
@@ -82,12 +86,21 @@ class Appointment(models.Model):
             action = rec.env.ref('hospital_management.action_cancel_appointment').read()[0]
             return action
 
-    # def action_send_email(self):
-    #     template = self.env.ref('om_hospital.appointment_mail_template')  # external id for email template
-    #     for rec in self:
-    #         if rec.patient_id.email:
-    #             email_values = {'subject': 'Test OM'}
-    #             template.send_mail(rec.id, force_send=True, email_values=email_values)  #force_send=True for send mail immediately
+    def action_send_email(self):
+        if self.check_send_email:
+            raise ValidationError(_("Email already sent!"))
+        template = self.env.ref('hospital_management.appointment_mail_template')
+        for rec in self:
+            if rec.patient_id.email:
+                rec.check_send_email = True
+                template.send_mail(rec.id, force_send=True)
+                return {
+                    'effect': {
+                        'fadeout': 'slow',
+                        'message': 'Email sent successfully',
+                        'type': 'rainbow_man', }
+                }
+
 
     @api.depends('state')
     def _compute_progress(self):
