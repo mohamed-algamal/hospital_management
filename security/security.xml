@@ -3,30 +3,41 @@
     <data>
         <!-- create category for groups-->
         <record id="hospital_category" model="ir.module.category">
-            <field name="name">Hospital Management</field>
-            <field name="sequence">10</field>
+            <field name="name">Hospital</field>
+        </record>
+
+        <!-- create category for groups-->
+        <record id="management_category" model="ir.module.category">
+            <field name="name">Management</field>
+            <field name="parent_id" ref="hospital_management.hospital_category"/>
         </record>
     </data>
     <data>
         <!-- create the user group -->
         <record id="hospital_doctor_group" model="res.groups">
             <field name="name">Doctor</field>
-            <field name="category_id" ref="hospital_category"/>
+            <field name="category_id" ref="hospital_management.management_category"/>
+            <field name="implied_ids" eval="[(6,0,[ref('hospital_nurse_group')])]"/>
+        </record>
+
+        <record id="hospital_nurse_group" model="res.groups">
+            <field name="name">Nurse</field>
+            <field name="category_id" ref="hospital_management.management_category"/>
         </record>
 
         <record id="hospital_manger_group" model="res.groups">
             <field name="name">Manger</field>
-            <field name="category_id" ref="hospital_category"/>
+            <field name="category_id" ref="hospital_management.management_category"/>
             <!-- name="implied_ids" this for inheriting access right and access rules -->
-            <field name="implied_ids" eval="[(4, ref('hospital_doctor_group'))]"/>
+            <field name="implied_ids" eval="[(6,0,[ref('hospital_doctor_group')])]"/>
         </record>
     </data>
     <data>
         <!-- create record rule -->
         <record id="doctor_rule" model="ir.rule">
             <field name="name">Doctor rule</field>
-            <field name="model_id" ref="model_hospital_operation"/> <!-- model_model_name -->
-            <field name="domain_force">[('doctor_id','=',user.id)]</field>
+            <field name="model_id" ref="model_operation"/> <!-- model_model_name -->
+            <field name="domain_force">[('doctor_ids','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('hospital_doctor_group'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -36,9 +47,20 @@
 
         <record id="manger_rule" model="ir.rule">
             <field name="name">Manger rule</field>
-            <field name="model_id" ref="model_hospital_operation"/> <!-- model_model_name -->
+            <field name="model_id" ref="model_operation"/> <!-- model_model_name -->
             <field name="domain_force">[(1,'=',1)]</field>
             <field name="groups" eval="[(4, ref('hospital_manger_group'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="nurse_rule" model="ir.rule">
+            <field name="name">nurse rule</field>
+            <field name="model_id" ref="model_operation"/> <!-- model_model_name -->
+            <field name="domain_force">[('nurse_ids','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('hospital_nurse_group'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
